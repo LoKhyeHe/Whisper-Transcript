@@ -3,7 +3,8 @@ import numpy as np
 import wave
 import time
 import whisper
-
+import torch
+torch.classes.__path__ = []
 st.title("🎤 Simple Audio Recorder with Streamlit")
 
 # Audio input widget
