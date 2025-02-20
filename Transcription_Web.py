@@ -5,7 +5,7 @@ import time
 import whisper
 import torch
 torch.classes.__path__ = []
-st.title("🎤 Simple Audio Recorder with Streamlit")
+st.title("🎤 Teacher Recorder by Smervax Jr")
 
 # Audio input widget
 audio_file = st.audio_input("Record your voice")
