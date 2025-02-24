@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # Firebase Setup
-cred = credentials.Certificate("firebase_credentials.json")  # Your Firebase JSON file
+cred = credentials.Certificate("nesherbot-firebase-adminsdk-fbsvc-15b8ace860.json")  # Your Firebase JSON file
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://nesherbot-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })

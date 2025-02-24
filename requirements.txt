@@ -2,3 +2,4 @@ openai-whisper
 ffmpeg-python
 numpy
 streamlit
+firebase_admin
