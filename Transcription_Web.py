@@ -1,30 +1,25 @@
 import streamlit as st
-import numpy as np
-import wave
-import time
-import whisper
-import torch
-torch.classes.__path__ = []
-st.title("🎤 Teacher Recorder by Smervax Jr")
+import firebase_admin
+from firebase_admin import credentials, db
 
-# Audio input widget
-audio_file = st.audio_input("Record your voice")
+# Firebase Setup
+cred = credentials.Certificate("firebase_credentials.json")  # Your Firebase JSON file
+firebase_admin.initialize_app(cred, {
+    "databaseURL": "https://nesherbot-default-rtdb.asia-southeast1.firebasedatabase.app/"
+})
 
-if audio_file:
-    file_name = f"recording_{int(time.time())}.wav"
-    
-    # Save the audio file
-    with open(file_name, "wb") as f:
-        f.write(audio_file.getvalue())
-    
-    st.success(f"Recording saved as {file_name}")
+votes_ref = db.reference("votes")
 
-    # Provide a download button
-    with open(file_name, "rb") as f:
-        st.download_button("Download Recording", f, file_name, "audio/wav")
+st.title("📊 Live Voting Results")
 
-    # Whisper Transcription Button
-    if st.button("Recording to Text"):
-        model = whisper.load_model("base")  # Load a Whisper model
-        result = model.transcribe(file_name)
-        st.text_area("Transcribed Text:", result["text"], height=200)
+# Fetch Live Votes
+votes = votes_ref.get() or {"thumbs_up": 0, "confused": 0}
+
+# Display Votes
+st.metric(label="👍 Thumbs Up", value=votes["thumbs_up"])
+st.metric(label="😕 Confused", value=votes["confused"])
+
+# Refresh Button
+if st.button("🔄 Refresh"):
+    votes = votes_ref.get()
+    st.experimental_rerun()
