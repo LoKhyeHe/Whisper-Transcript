@@ -1,25 +1,22 @@
 import streamlit as st
-import firebase_admin
-from firebase_admin import credentials, db
+import requests
 
-# Firebase Setup
-cred = credentials.Certificate("nesherbot-firebase-adminsdk-fbsvc-15b8ace860.json")  # Your Firebase JSON file
-firebase_admin.initialize_app(cred, {
-    "databaseURL": "https://nesherbot-default-rtdb.asia-southeast1.firebasedatabase.app/"
-})
+API_URL = "https://your-secure-api.com/vote_counts"
 
-votes_ref = db.reference("votes")
+st.title("Live Vote Count")
 
-st.title("📊 Live Voting Results")
+# Fetch vote counts from the API
+def get_vote_counts():
+    try:
+        response = requests.get(API_URL)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {"thumbs_up": 0, "confused": 0}
+    except:
+        return {"thumbs_up": 0, "confused": 0}
 
-# Fetch Live Votes
-votes = votes_ref.get() or {"thumbs_up": 0, "confused": 0}
+vote_data = get_vote_counts()
 
-# Display Votes
-st.metric(label="👍 Thumbs Up", value=votes["thumbs_up"])
-st.metric(label="😕 Confused", value=votes["confused"])
-
-# Refresh Button
-if st.button("🔄 Refresh"):
-    votes = votes_ref.get()
-    st.experimental_rerun()
+st.metric("👍 Thumbs Up", vote_data["thumbs_up"])
+st.metric("😕 Confused", vote_data["confused"])
